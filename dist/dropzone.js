@@ -2331,15 +2331,18 @@ var Dropzone = function (_Emitter) {
 
             // Clear the data from the chunk
             chunk.dataBlock = null;
+            status = chunk.xhr.status
             // Leaving this reference to xhr intact here will cause memory leaks in some browsers
             chunk.xhr = null;
 
-            for (var i = 0; i < file.upload.totalChunkCount; i++) {
-              if (file.upload.chunks[i] === undefined) {
-                return handleNextChunk();
-              }
-              if (file.upload.chunks[i].status !== Dropzone.SUCCESS) {
-                allFinished = false;
+            if (status != 201) {
+              for (var i = 0; i < file.upload.totalChunkCount; i++) {
+                if (file.upload.chunks[i] === undefined) {
+                  return handleNextChunk();
+                }
+                if (file.upload.chunks[i].status !== Dropzone.SUCCESS) {
+                  allFinished = false;
+                }
               }
             }
 
